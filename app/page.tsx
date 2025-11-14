@@ -4,9 +4,9 @@ import React from 'react'
 
 function Home() {
   return (
-    <Container className='flex items-center justify-center h-screen'>
-      <ApiResolve/>
-    </Container>
+    <div className='flex justify-center items-center'>
+      Hi
+    </div>
   )
 }
 
