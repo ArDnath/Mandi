@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 "use client";
 import Image from "next/image";
 
@@ -40,5 +41,18 @@ export default function Navbar() {
         <button className="px-3 py-1 rounded">Search</button>
       </div>
     </nav>
+=======
+'use client';
+import DesktopNavbar from './DesktopNav';
+import MobileNavbar from './MobileNav';
+
+export default function Navbar() {
+  return (
+    <>
+      <DesktopNavbar />
+      {/* MobileNavbar itself is hidden on md+ and DesktopNavbar hidden on sm */}
+      <MobileNavbar />
+    </>
+>>>>>>> Stashed changes
   );
 }
