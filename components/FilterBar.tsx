@@ -151,11 +151,9 @@ export default function FilterBar() {
           })}
         </div>
 
-        <div className="my-6">
-          <h1 className="text-2xl font-semibold tracking-tight">Shop By</h1>
-          <p className="text-sm text-neutral-500 mt-1">
-            Filter products by manufacturer, price and ratings.
-          </p>
+        <div className="mb-6 mt-2 space-y-3">
+          <h1 className="text-2xl font-bold tracking-wider">SHOP BY</h1>
+          <div className='border-2 border-neutral-900 w-8 rounded-2xl'></div>
         </div>
 
         {/* Shop By Filters */}
