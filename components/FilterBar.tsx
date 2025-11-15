@@ -1,42 +1,88 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Plus, ChevronDown } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 
 const categories = [
   {
-    id: 'furnitures',
-    title: 'Furnitures',
-    items: ['Chairs', 'Tables', 'Office', 'Storage', 'Stools & Benches'],
+    id: 'electronics',
+    title: 'Electronics',
+    items: ['Smartphones', 'Laptops', 'Storage Devices', 'Monitors', 'Gaming'],
   },
   {
-    id: 'chairs-sofas',
-    title: 'Chairs & Sofas',
-    items: ['Accent Chairs', 'Dining Chairs', 'Sofas', 'Sectionals', 'Recliners'],
+    id: 'jewelery',
+    title: 'Jewelery',
+    items: ['Rings', 'Necklaces', 'Bracelets', 'Earrings', 'Gold', 'Silver'],
+  },
+  {
+    id: 'mens-clothing',
+    title: "Men's Clothing",
+    items: ['T-Shirts', 'Casual Shirts', 'Jackets', 'Jeans', 'Slim Fit'],
+  },
+  {
+    id: 'womens-clothing',
+    title: "Women's Clothing",
+    items: ['Dresses', 'Tops', 'Jackets', 'Casual Wear', 'T-Shirts'],
   },
 ];
 
+const manufacturers = [
+  'Fjallraven',
+  'John Hardy',
+  'WD (Western Digital)',
+  'SanDisk',
+  'Silicon Power',
+  'Acer',
+  'Samsung',
+];
+
 export default function FilterBar() {
-  const [openSections, setOpenSections] = useState<Record<string, boolean>>({
-    furnitures: true,
-    'chairs-sofas': true,
+  // Only first two categories are open by default
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>(() => {
+    const sections: Record<string, boolean> = {};
+    categories.forEach((cat, index) => {
+      sections[cat.id] = index < 2; // First two categories are open
+    });
+    return sections;
   });
+
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedManufacturers, setSelectedManufacturers] = useState<string[]>([]);
+  const [minPrice, setMinPrice] = useState<string>('0');
+  const [maxPrice, setMaxPrice] = useState<string>('1000');
+  const [selectedRating, setSelectedRating] = useState<number | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   const toggleSection = (id: string) =>
     setOpenSections((s) => ({ ...s, [id]: !s[id] }));
 
+  const toggleCategory = (catId: string, item: string) => {
+    const key = `${catId}-${item}`;
+    setSelectedCategories((prev) =>
+      prev.includes(key) ? [] : [key] // Only keep the newly selected item or clear if clicking the same item
+    );
+  };
+
+  const toggleManufacturer = (manufacturer: string) => {
+    setSelectedManufacturers((prev) =>
+      prev.includes(manufacturer)
+        ? prev.filter((m) => m !== manufacturer)
+        : [...prev, manufacturer]
+    );
+  };
+
   return (
     <nav
       aria-label="Shop filters"
-      className="h-screen md:sticky md:top-16 w-full md:w-80 bg-white border-r border-neutral-200 text-neutral-700"
+      className="h-screen md:sticky md:top-16 w-full md:w-80  text-neutral-700"
     >
-      <div className="h-full px-5 py-6">
-        {/* Header */}
-        <header className="mb-6">
-          <h1 className="text-2xl font-semibold tracking-tight">Categories</h1>
-          <p className="text-sm text-neutral-500 mt-1">
-            Narrow down results by category, price or brand.
-          </p>
+      <div className="h-full mt-6 px-5 py-6">
+        <div className='mb-6'>
+          Home / <span className='font-bold'>Electronics</span>
+        </div>
+        <header className="mb-6 space-y-3">
+          <h1 className="text-2xl font-bold tracking-wider">CATEGORIES</h1>
+          <div className='border-2 border-neutral-900 w-8 rounded-2xl'></div>
         </header>
 
         {/* Category accordion */}
@@ -45,7 +91,7 @@ export default function FilterBar() {
             const isOpen = !!openSections[cat.id];
             return (
               <section key={cat.id} aria-labelledby={`${cat.id}-label`}>
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between border-b-2 border-neutral-200">
                   <h2
                     id={`${cat.id}-label`}
                     className="text-lg font-medium text-neutral-800"
@@ -61,7 +107,9 @@ export default function FilterBar() {
                   >
                     <ChevronDown
                       size={18}
-                      className={`transform transition-transform duration-200 ${isOpen ? '-rotate-180' : 'rotate-0'}`}
+                      className={`transform transition-transform duration-200 ${
+                        isOpen ? '-rotate-180' : 'rotate-0'
+                      }`}
                       aria-hidden
                     />
                     <span className="sr-only">{isOpen ? 'Collapse' : 'Expand'}</span>
@@ -76,16 +124,26 @@ export default function FilterBar() {
                   aria-hidden={!isOpen}
                 >
                   <ul className="space-y-2 text-neutral-600">
-                    {cat.items.map((it) => (
-                      <li key={it}>
-                        <button
-                          type="button"
-                          className="w-full text-left px-3 py-2 rounded-md hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-neutral-200 transition-colors duration-150"
-                        >
-                          <span className="inline-block align-middle">{it}</span>
-                        </button>
-                      </li>
-                    ))}
+                    {cat.items.map((it) => {
+                      const itemKey = `${cat.id}-${it}`;
+                      const isSelected = selectedCategories.includes(itemKey);
+
+                      return (
+                        <li key={it}>
+                          <button
+                            type="button"
+                            onClick={() => toggleCategory(cat.id, it)}
+                            className={`w-full text-left py-2 px-3 text-sm rounded-md transition-colors ${
+                              isSelected
+                                ? 'bg-neutral-200 text-black font-medium'
+                                : 'text-neutral-800 hover:bg-neutral-100'
+                            }`}
+                          >
+                            <span className="inline-block align-middle">{it}</span>
+                          </button>
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
               </section>
@@ -96,59 +154,122 @@ export default function FilterBar() {
         <div className="my-6">
           <h1 className="text-2xl font-semibold tracking-tight">Shop By</h1>
           <p className="text-sm text-neutral-500 mt-1">
-            Narrow down results by category, price or brand.
+            Filter products by manufacturer, price and ratings.
           </p>
         </div>
 
-        {/* Quick actions */}
-        <div className="mt-8  pt-6 space-y-4">
-          {/* example subfilter header */}
-          <div className="flex items-center justify-between ">
-            <h3 className="text-base font-semibold">Manufracturer</h3>
-          </div>
-
-          {/* Example: price range inputs */}
-          <div>
-            <label className="block text-sm font-medium text-neutral-700 mb-2">Price</label>
-            <div className="flex items-center gap-2">
-              <input
-                type="range"
-                placeholder="Min"
-                className="w-1/2 px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-neutral-200"
-              />
+        {/* Shop By Filters */}
+        <div className="mt-8 space-y-6">
+          {/* Manufacturer Section */}
+          <div className="pb-6 border-b-2 border-neutral-200">
+            <h3 className="text-base font-semibold text-neutral-800 mb-3">
+              Manufacturer
+            </h3>
+            <div className="max-h-48 overflow-y-auto">
+              {manufacturers.map((manufacturer) => {
+                const isSelected = selectedManufacturers.includes(manufacturer);
+                return (
+                  <label
+                    key={manufacturer}
+                    className="flex items-center space-x-3 cursor-pointer hover:bg-neutral-50 p-2 rounded-lg transition"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={isSelected}
+                      onChange={() => toggleManufacturer(manufacturer)}
+                      className="w-4 h-4 rounded border-neutral-300 text-neutral-800 focus:ring-2 focus:ring-neutral-300"
+                    />
+                    <span className="text-sm text-neutral-700">{manufacturer}</span>
+                  </label>
+                );
+              })}
             </div>
           </div>
 
-          {/* Example: ratings */}
+          {/* Price Range with Dual Slider */}
           <div>
-            <label className="block text-sm font-medium text-neutral-700 mb-2">Rating</label>
-            <div className="flex gap-2">
-              {[4, 3, 2, 1].map((r) => (
+            <label className="block text-sm font-medium text-neutral-700 mb-3">
+              Price Range
+            </label>
+            <div className="relative pt-2 pb-6">
+              {/* Track */}
+              <div className="relative h-2 bg-neutral-200 rounded-lg">
+                {/* Active range */}
+                <div
+                  className="absolute h-2 bg-neutral-800 rounded-lg"
+                  style={{
+                    left: `${(Number(minPrice) / 1000) * 100}%`,
+                    right: `${100 - (Number(maxPrice) / 1000) * 100}%`,
+                  }}
+                />
+              </div>
+
+              {/* Min slider */}
+              <input
+                type="range"
+                min="0"
+                max="1000"
+                value={minPrice}
+                onChange={(e) => {
+                  const value = Number(e.target.value);
+                  if (value <= Number(maxPrice)) {
+                    setMinPrice(e.target.value);
+                  }
+                }}
+                className="absolute w-full h-2 top-2 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-neutral-800 [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:shadow-md [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-neutral-800 [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:shadow-md"
+              />
+
+              {/* Max slider */}
+              <input
+                type="range"
+                min="0"
+                max="1000"
+                value={maxPrice}
+                onChange={(e) => {
+                  const value = Number(e.target.value);
+                  if (value >= Number(minPrice)) {
+                    setMaxPrice(e.target.value);
+                  }
+                }}
+                className="absolute w-full h-2 top-2 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-neutral-800 [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:shadow-md [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-neutral-800 [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:shadow-md"
+              />
+            </div>
+
+            {/* Price labels */}
+            <div className="flex justify-between items-center">
+              <span className="text-sm font-medium text-neutral-800 bg-neutral-100 px-3 py-1 rounded-md">
+                ${minPrice}
+              </span>
+              <span className="text-neutral-400">—</span>
+              <span className="text-sm font-medium text-neutral-800 bg-neutral-100 px-3 py-1 rounded-md">
+                ${maxPrice}
+              </span>
+            </div>
+          </div>
+
+        
+          {/* Rating */}
+          <div>
+            <label className="block text-sm font-medium text-neutral-700 mb-3">
+              Customer Rating
+            </label>
+            <div className="flex gap-2 flex-wrap">
+              {[5, 4, 3, 2, 1].map((r) => (
                 <button
                   key={r}
-                  className="px-3 py-1 rounded-md text-sm bg-neutral-50 hover:bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-neutral-200"
+                  onClick={() => setSelectedRating(selectedRating === r ? null : r)}
+                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-neutral-300 ${
+                    selectedRating === r
+                      ? 'bg-neutral-800 text-white'
+                      : 'bg-neutral-50 hover:bg-neutral-100 text-neutral-700'
+                  }`}
                 >
                   {r}+ ★
                 </button>
               ))}
             </div>
           </div>
-
-          {/* Apply / Clear */}
-          <div className="flex gap-3">
-            <button className="flex-1 py-2 rounded-md bg-neutral-900 text-white font-medium">
-              Apply
-            </button>
-            <button className="flex-1 py-2 rounded-md border text-neutral-700">
-              Clear
-            </button>
           </div>
-        </div>
-
-        {/* Footer (user/account or small help) */}
-        <div className="mt-6 pt-6 border-t border-neutral-100 text-sm text-neutral-500">
-          <p>Showing filters only — results appear on the products list.</p>
-        </div>
       </div>
     </nav>
   );
