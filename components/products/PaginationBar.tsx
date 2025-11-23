@@ -1,51 +1,32 @@
 "use client";
-import React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { usePaginationStore } from "@/store/paginationStore";
 
 interface PaginationBarProps {
-  totalPages: number;
+  currentPage: number;
+  goToPage: (page: number) => void;
+  goToNextPage: () => void;
+  goToPreviousPage: () => void;
+  canGoNext: boolean;
+  canGoPrev: boolean;
+  pageNumbers: (number | string)[];
 }
 
-export function PaginationBar({ totalPages }: PaginationBarProps) {
-  const currentPage = usePaginationStore((state) => state.currentPage);
-  const setCurrentPage = usePaginationStore((state) => state.setCurrentPage);
-  const canGoNext = currentPage < totalPages;
-  const canGoPrev = currentPage > 1;
-
-  // Page numbers logic
-  const maxVisible = 5;
-  let pageNumbers: (number | string)[] = [];
-  if (totalPages <= maxVisible) {
-    for (let i = 1; i <= totalPages; i++) pageNumbers.push(i);
-  } else {
-    if (currentPage <= 3) {
-      for (let i = 1; i <= 4; i++) pageNumbers.push(i);
-      pageNumbers.push("...");
-      pageNumbers.push(totalPages);
-    } else if (currentPage >= totalPages - 2) {
-      pageNumbers.push(1);
-      pageNumbers.push("...");
-      for (let i = totalPages - 3; i <= totalPages; i++) pageNumbers.push(i);
-    } else {
-      pageNumbers.push(1);
-      pageNumbers.push("...");
-      pageNumbers.push(currentPage - 1);
-      pageNumbers.push(currentPage);
-      pageNumbers.push(currentPage + 1);
-      pageNumbers.push("...");
-      pageNumbers.push(totalPages);
-    }
-  }
-
+export function PaginationBar({
+  currentPage,
+  goToPage,
+  goToNextPage,
+  goToPreviousPage,
+  canGoNext,
+  canGoPrev,
+  pageNumbers,
+}: PaginationBarProps) {
   return (
     <nav
       className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12"
       aria-label="Pagination"
     >
-      {/* Previous Button */}
       <button
-        onClick={() => setCurrentPage(currentPage - 1)}
+        onClick={goToPreviousPage}
         disabled={!canGoPrev}
         className={`flex items-center gap-1 px-4 py-2 border rounded-md transition-colors ${
           !canGoPrev
@@ -60,7 +41,7 @@ export function PaginationBar({ totalPages }: PaginationBarProps) {
 
       {/* Page Numbers */}
       <div className="flex items-center gap-2">
-        {pageNumbers.map((page, idx) =>
+        {pageNumbers.map((page: number | string, idx: number) =>
           typeof page === "string" ? (
             <span
               key={`ellipsis-${idx}`}
@@ -72,7 +53,7 @@ export function PaginationBar({ totalPages }: PaginationBarProps) {
           ) : (
             <button
               key={page}
-              onClick={() => setCurrentPage(page)}
+              onClick={() => goToPage(page)}
               className={`min-w-[40px] px-3 py-2 border rounded-md transition-colors ${
                 page === currentPage
                   ? "bg-neutral-800 text-white border-neutral-800"
@@ -89,7 +70,7 @@ export function PaginationBar({ totalPages }: PaginationBarProps) {
 
       {/* Next Button */}
       <button
-        onClick={() => setCurrentPage(currentPage + 1)}
+        onClick={goToNextPage}
         disabled={!canGoNext}
         className={`flex items-center gap-1 px-4 py-2 border rounded-md transition-colors ${
           !canGoNext
