@@ -24,3 +24,13 @@ html {
   font-family: var(--font-inter);
   letter-spacing: 0.05em; /* Adjust as needed */
 }   
+
+@layer utilities {
+  .scrollbar-hide::-webkit-scrollbar{
+    display: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar{
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}

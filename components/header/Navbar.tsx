@@ -1,7 +1,7 @@
 
 'use client';
-import DesktopNavbar from '@/components/Header/DesktopNav';
-import MobileNavbar from '@/components/Header/MobileNav'
+import DesktopNavbar from '@/components/header/DesktopNav';
+import MobileNavbar from '@/components/header/MobileNav'
 
 export default function Navbar() {
   return (
