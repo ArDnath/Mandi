@@ -1,9 +1,9 @@
 "use client";
 
-import React from "react";
+
 import { IProduct } from "@/lib/api/types";
 import { ProductCard } from "./ProductCard";
-import { usePaginationStore } from "@/store/paginationStore";
+import { usePagination } from "@/hooks/usePagination";
 import { PaginationBar } from "./PaginationBar";
 
 interface ProductGridProps {
@@ -12,55 +12,29 @@ interface ProductGridProps {
 }
 
 export function ProductGrid({ products, itemsPerPage = 9 }: ProductGridProps) {
-  const currentPage = usePaginationStore((state) => state.currentPage);
-  const setCurrentPage = usePaginationStore((state) => state.setCurrentPage);
-  const setTotalPages = usePaginationStore((state) => state.setTotalPages);
+  const {
+    currentItems,
+    currentPage,
+    totalPages,
+    totalItems,
+    startIndex,
+    endIndex,
+    goToPage,
+    goToNextPage,
+    goToPreviousPage,
+    canGoNext,
+    canGoPrev,
+    pageNumbers,
+  } = usePagination({
+    items: products,
+    itemsPerPage,
+    initialPage: 1,
+  });
 
-  const totalItems = products.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
-  const currentItems = products.slice(startIndex, endIndex);
-
-  React.useEffect(() => {
-    setTotalPages(totalPages);
-    if (currentPage > totalPages) setCurrentPage(1);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [totalPages, setTotalPages, currentPage, setCurrentPage]);
-
-  const goToPage = (page: number) => setCurrentPage(page);
-  const goToNextPage = () => setCurrentPage(Math.min(currentPage + 1, totalPages));
-  const goToPreviousPage = () => setCurrentPage(Math.max(currentPage - 1, 1));
-  const canGoNext = currentPage < totalPages;
-  const canGoPrev = currentPage > 1;
-
-  // Page numbers logic (same as before)
-  const maxVisible = 5;
-  let pageNumbers: (number | string)[] = [];
-  if (totalPages <= maxVisible) {
-    for (let i = 1; i <= totalPages; i++) pageNumbers.push(i);
-  } else {
-    if (currentPage <= 3) {
-      for (let i = 1; i <= 4; i++) pageNumbers.push(i);
-      pageNumbers.push('...');
-      pageNumbers.push(totalPages);
-    } else if (currentPage >= totalPages - 2) {
-      pageNumbers.push(1);
-      pageNumbers.push('...');
-      for (let i = totalPages - 3; i <= totalPages; i++) pageNumbers.push(i);
-    } else {
-      pageNumbers.push(1);
-      pageNumbers.push('...');
-      pageNumbers.push(currentPage - 1);
-      pageNumbers.push(currentPage);
-      pageNumbers.push(currentPage + 1);
-      pageNumbers.push('...');
-      pageNumbers.push(totalPages);
-    }
-  }
-
-  // Don't show pagination if there's only one page or no products
   const showPagination = totalPages > 1;
+
+  // DEBUG: Log pagination state
+  console.log('DEBUG pagination:', { totalPages, productsLength: products.length, itemsPerPage });
 
   return (
     <div className="mt-4 flex flex-col gap-8">
@@ -86,9 +60,17 @@ export function ProductGrid({ products, itemsPerPage = 9 }: ProductGridProps) {
         </div>
       )}
 
-      {/* Pagination */}
+      
       {showPagination && (
-        <PaginationBar totalPages={totalPages} />
+        <PaginationBar
+          currentPage={currentPage}
+          goToPage={goToPage}
+          goToNextPage={goToNextPage}
+          goToPreviousPage={goToPreviousPage}
+          canGoNext={canGoNext}
+          canGoPrev={canGoPrev}
+          pageNumbers={pageNumbers}
+        />
       )}
     </div>
   );
