@@ -74,7 +74,7 @@ export default function FilterBar() {
   return (
     <nav
       aria-label="Shop filters"
-      className="h-screen md:sticky md:top-16 w-full md:w-80  text-neutral-700 overflow-y-auto scrollbar-hide "
+      className="h-[70vh] md:h-screen md:sticky md:top-16 w-full md:w-80 text-neutral-700 overflow-y-auto scrollbar-hide bg-white px-2 sm:px-5"
     >
       <div className="h-full mt-6 px-5 py-6">
         <div className='mb-6'>

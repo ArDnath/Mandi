@@ -22,7 +22,7 @@ export function PaginationBar({
 }: PaginationBarProps) {
   return (
     <nav
-      className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12"
+      className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 mb-8 sm:mb-12 px-2"
       aria-label="Pagination"
     >
       <button
@@ -40,7 +40,7 @@ export function PaginationBar({
       </button>
 
       {/* Page Numbers */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1 sm:gap-2 overflow-x-auto scrollbar-hide w-full justify-center">
         {pageNumbers.map((page: number | string, idx: number) =>
           typeof page === "string" ? (
             <span

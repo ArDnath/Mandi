@@ -1,15 +1,30 @@
 
+'use client';
+
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 export default function Footer() {
+  const pathname = usePathname();
+  
+  const handleScrollToTop = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (pathname === "/") {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
   return (
-    <footer className="bg-neutral-primary-soft mt-28">
+    <footer className="bg-neutral-primary-soft mt-16 sm:mt-28">
       <div className="mx-auto w-full max-w-7xl p-4 py-6 lg:py-8">
-        <div className="md:flex md:justify-between">
+        <div className="flex flex-col md:flex-row md:justify-between gap-8 md:gap-0">
           <div className="mb-6 md:mb-0">
-            <Link href="/" className="flex items-center">
-            <Image src="/logo.webp" alt="Logo" width={100} height={100}/>
+            <Link 
+              href="/" 
+              className="flex items-center" 
+              onClick={handleScrollToTop}
+            >
+              <Image src="/logo.webp" alt="Logo" width={100} height={100}/>
             </Link>
             <p className="text-sm text-body font-light max-w-xs">
               Your neighbourhood online bazaar — fresh deals, trusted sellers, and
@@ -108,7 +123,11 @@ export default function Footer() {
         <div className="sm:flex sm:items-center sm:justify-between">
           <span className="text-sm text-body sm:text-center">
             © {new Date().getFullYear()}{" "}
-            <Link href="/" className="hover:underline">
+            <Link 
+              href="/" 
+              className="hover:underline"
+              onClick={handleScrollToTop}
+            >
               Mandi
             </Link>
             . All rights reserved.

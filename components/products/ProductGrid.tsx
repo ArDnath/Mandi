@@ -37,7 +37,7 @@ export function ProductGrid({ products, itemsPerPage = 9 }: ProductGridProps) {
   console.log('DEBUG pagination:', { totalPages, productsLength: products.length, itemsPerPage });
 
   return (
-    <div className="mt-4 flex flex-col gap-8">
+    <div className="mt-2 sm:mt-4 flex flex-col gap-4 sm:gap-8 px-2 sm:px-0">
       {/* Results Count */}
       {products.length > 0 && (
         <div className="text-sm text-neutral-600">
