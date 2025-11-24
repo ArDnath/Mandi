@@ -9,7 +9,6 @@ import { usePathname } from "next/navigation";
 const links = [
   { id: 1, label: "Home" ,href:"/"},
   { id: 2, label: "Features", href:"/features"},
-  { id: 3, label: "blogs", href:"/blogs" },
   { id: 4, label: "Contact", href:"/contacts" },
 ];
 
@@ -54,8 +53,14 @@ export default function DesktopNavbar() {
         </Link>
 
         <div className="flex items-center gap-6">
-          <button className="rounded-lg shadow-sm shadow-neutral-400  hover:shadow-neutral-500
-           bg-neutral-800 text-neutral-200 px-4 py-2 hover:bg-neutral-700 hover:text-neutral-100 transition">login</button>
+          <Link
+            href="/auth/signin"
+            className="text-sm font-medium text-heading hover:underline"
+          >
+            <button className="rounded-lg shadow-sm shadow-neutral-400  hover:shadow-neutral-500
+            bg-neutral-800 text-neutral-200 px-4 py-2 hover:bg-neutral-700 hover:text-neutral-100 transition">login
+            </button>
+          </Link>
           <div className="text-neutral-900 hover:text-neutral-500 transition"><Heart size={20} /></div>
           <div className="text-neutral-900 hover:text-neutral-500 transition"><ShoppingCart size={20} /></div>
           <button className="text-neutral-900 hover:text-neutral-500 transition"><Search size={20} /></button>
