@@ -2,9 +2,9 @@
 
 
 import { IProduct } from "@/lib/api/types";
-import { ProductCard } from "./ProductCard";
+import { ProductCard } from "./product-card";
 import { usePagination } from "@/hooks/usePagination";
-import { PaginationBar } from "./PaginationBar";
+import { PaginationBar } from "./pagination-bar";
 
 interface ProductGridProps {
   products: IProduct[];

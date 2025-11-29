@@ -1,10 +1,10 @@
 import React from "react";
-import { Container } from "@/components/container";
-import FilterBar from "@/components/home/FilterBar";
-import HeroSection from "@/components/home/Hero";
+import { Container } from "@/components/layout/container";
+import FilterBar from "@/components/home/filter-bar";
+import HeroSection from "@/components/home/hero-section";
 import { getAllProducts } from "@/lib/api/fakestore";
 import { IProduct } from "@/lib/api/types";
-import { ProductGrid } from "@/components/products/ProductGrid";
+import { ProductGrid } from "@/components/products/product-grid";
 
 async function Home() {
   const products: IProduct[] = await getAllProducts();
