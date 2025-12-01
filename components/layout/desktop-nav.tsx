@@ -54,7 +54,7 @@ export default function DesktopNavbar() {
 
         <div className="flex items-center gap-6">
           <Link
-            href="/auth/signin"
+          href={'/signin'}
             className="text-sm font-medium text-heading hover:underline"
           >
             <button className="rounded-lg shadow-sm shadow-neutral-400  hover:shadow-neutral-500
