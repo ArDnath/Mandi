@@ -156,7 +156,7 @@ export default function MobileNavbar() {
             {/* Account Section */}
             <div className="px-4 py-4 border-t border-neutral-200">
               <Link 
-                href="/account" 
+                href="/signin" 
                 onClick={() => setOpen(false)} 
                 className="block py-3 px-4 text-center bg-neutral-900 text-white rounded-lg font-medium hover:bg-neutral-800 active:bg-neutral-700 transition-colors focus:outline-none focus:ring-2 focus:ring-neutral-400"
               >
