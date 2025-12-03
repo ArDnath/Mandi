@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useScrollPosition } from "@/hooks/useScrollPosition.ts";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
+import { Session } from "next-auth";
+import { logout } from "@/lib/auth-actions";
 
 const links = [
   { id: 1, label: "Home" ,href:"/"},
@@ -12,9 +14,11 @@ const links = [
   { id: 4, label: "Contact", href:"/contacts" },
 ];
 
-export default function DesktopNavbar() {
+export default function DesktopNavbar({session}:{session:Session |null}) {
   const scrollPostion = useScrollPosition();
   const pathname = usePathname();
+
+ 
 
   return (
     <nav 
@@ -53,14 +57,26 @@ export default function DesktopNavbar() {
         </Link>
 
         <div className="flex items-center gap-6">
-          <Link
-          href={'/signin'}
+          {
+            session ?(
+              <>
+              <button className="rounded-lg shadow-sm shadow-neutral-400  hover:shadow-neutral-500
+            bg-neutral-800 text-neutral-200 px-4 py-2 hover:bg-neutral-700 hover:text-neutral-100 transition"
+            onClick={logout}
+            >logout
+            </button>
+              </>
+            ):(
+              <Link
+          href={'/sign-in'}
             className="text-sm font-medium text-heading hover:underline"
           >
             <button className="rounded-lg shadow-sm shadow-neutral-400  hover:shadow-neutral-500
             bg-neutral-800 text-neutral-200 px-4 py-2 hover:bg-neutral-700 hover:text-neutral-100 transition">login
             </button>
           </Link>
+            )
+          }
           <div className="text-neutral-900 hover:text-neutral-500 transition"><Heart size={20} /></div>
           <div className="text-neutral-900 hover:text-neutral-500 transition"><ShoppingCart size={20} /></div>
           <button className="text-neutral-900 hover:text-neutral-500 transition"><Search size={20} /></button>

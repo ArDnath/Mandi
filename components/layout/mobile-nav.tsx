@@ -11,7 +11,10 @@ const links = [
   { id: 4, label: "Contact", href: "/contacts" },
 ];
 
-export default function MobileNavbar() {
+import { Session } from "next-auth";
+import { logout } from "@/lib/auth-actions";
+
+export default function MobileNavbar({ session }: { session: Session | null }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
@@ -40,13 +43,13 @@ export default function MobileNavbar() {
           >
             {open ? <X size={22} /> : <Menu size={22} />}
           </button>
-          
+
           <Link href="/" className="flex items-center">
-            <Image 
-              src="/logo.webp" 
-              alt="Logo" 
-              width={70} 
-              height={70} 
+            <Image
+              src="/logo.webp"
+              alt="Logo"
+              width={70}
+              height={70}
               draggable={false}
               priority
             />
@@ -55,13 +58,13 @@ export default function MobileNavbar() {
 
         {/* Right Icons */}
         <div className="flex items-center gap-1">
-          <button 
+          <button
             aria-label="Favorites"
             className="p-2.5 rounded-lg text-neutral-900 hover:bg-neutral-100 active:bg-neutral-200 transition-colors focus:outline-none focus:ring-2 focus:ring-neutral-400"
           >
             <Heart size={20} />
           </button>
-          <button 
+          <button
             aria-label="Shopping cart"
             className="p-2.5 rounded-lg text-neutral-900 hover:bg-neutral-100 active:bg-neutral-200 transition-colors focus:outline-none focus:ring-2 focus:ring-neutral-400"
           >
@@ -74,13 +77,13 @@ export default function MobileNavbar() {
       <div className="px-4 pb-3">
         <div className="flex items-center border border-neutral-300 rounded-xl overflow-hidden bg-neutral-50 focus-within:border-neutral-400 focus-within:bg-white transition-colors">
           <label htmlFor="mobile-search" className="sr-only">Search products</label>
-          <input 
+          <input
             id="mobile-search"
-            type="search" 
-            placeholder="Search products..." 
+            type="search"
+            placeholder="Search products..."
             className="flex-1 px-4 py-2.5 bg-transparent outline-none text-sm placeholder:text-neutral-500"
           />
-          <button 
+          <button
             aria-label="Search"
             className="px-4 py-2.5 hover:bg-neutral-200 active:bg-neutral-300 transition-colors"
           >
@@ -107,20 +110,20 @@ export default function MobileNavbar() {
           <aside className="absolute left-0 top-0 bottom-0 w-80 max-w-[85vw] bg-white shadow-2xl animate-in slide-in-from-left duration-300">
             {/* Menu Header */}
             <div className="flex items-center justify-between px-4 py-4 border-b border-neutral-200">
-              <Link 
-                href="/" 
-                onClick={() => setOpen(false)} 
+              <Link
+                href="/"
+                onClick={() => setOpen(false)}
                 className="flex items-center focus:outline-none focus:ring-2 focus:ring-neutral-400 rounded-lg"
               >
-                <Image 
-                  src="/logo.webp" 
-                  alt="Logo" 
-                  width={70} 
-                  height={70} 
+                <Image
+                  src="/logo.webp"
+                  alt="Logo"
+                  width={70}
+                  height={70}
                   draggable={false}
                 />
               </Link>
-              <button 
+              <button
                 onClick={() => setOpen(false)}
                 aria-label="Close menu"
                 className="p-2 rounded-lg hover:bg-neutral-100 active:bg-neutral-200 transition-colors focus:outline-none focus:ring-2 focus:ring-neutral-400"
@@ -136,14 +139,13 @@ export default function MobileNavbar() {
                   const isActive = pathname === link.href;
                   return (
                     <li key={link.id}>
-                      <Link 
-                        href={link.href} 
-                        onClick={() => setOpen(false)} 
-                        className={`block py-3 px-4 rounded-lg text-base font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-neutral-400 ${
-                          isActive 
-                            ? 'bg-neutral-900 text-white' 
+                      <Link
+                        href={link.href}
+                        onClick={() => setOpen(false)}
+                        className={`block py-3 px-4 rounded-lg text-base font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-neutral-400 ${isActive
+                            ? 'bg-neutral-900 text-white'
                             : 'text-neutral-700 hover:bg-neutral-100 active:bg-neutral-200'
-                        }`}
+                          }`}
                       >
                         {link.label}
                       </Link>
@@ -155,13 +157,25 @@ export default function MobileNavbar() {
 
             {/* Account Section */}
             <div className="px-4 py-4 border-t border-neutral-200">
-              <Link 
-                href="/signin" 
-                onClick={() => setOpen(false)} 
-                className="block py-3 px-4 text-center bg-neutral-900 text-white rounded-lg font-medium hover:bg-neutral-800 active:bg-neutral-700 transition-colors focus:outline-none focus:ring-2 focus:ring-neutral-400"
-              >
-                Login / Register
-              </Link>
+              {session ? (
+                <button
+                  onClick={() => {
+                    logout();
+                    setOpen(false);
+                  }}
+                  className="w-full block py-3 px-4 text-center bg-neutral-900 text-white rounded-lg font-medium hover:bg-neutral-800 active:bg-neutral-700 transition-colors focus:outline-none focus:ring-2 focus:ring-neutral-400"
+                >
+                  Logout
+                </button>
+              ) : (
+                <Link
+                  href="/sign-in"
+                  onClick={() => setOpen(false)}
+                  className="block py-3 px-4 text-center bg-neutral-900 text-white rounded-lg font-medium hover:bg-neutral-800 active:bg-neutral-700 transition-colors focus:outline-none focus:ring-2 focus:ring-neutral-400"
+                >
+                  Login / Register
+                </Link>
+              )}
             </div>
           </aside>
         </div>

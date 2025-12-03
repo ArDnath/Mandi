@@ -7,8 +7,21 @@ datasource db {
   provider = "postgresql"
 }
 
+model User {
+  id            String          @id @default(cuid())
+  name          String?
+  email         String          @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?          @unique
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  accounts      Account[]
+  Authenticator Authenticator[]
+  sessions      Session[]
+}
+
 model Account {
-  id                String  @id @default(cuid())
   userId            String
   type              String
   provider          String
@@ -20,162 +33,40 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
-  users             User    @relation(fields: [userId], references: [id])
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([provider, providerAccountId])
-  @@index([userId])
-  @@map("accounts")
+  @@id([provider, providerAccountId])
 }
 
 model Session {
-  id           String   @id @default(cuid())
   sessionToken String   @unique
   userId       String
   expires      DateTime
-  users        User     @relation(fields: [userId], references: [id])
-
-  @@index([userId])
-  @@map("sessions")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model VerificationToken {
   identifier String
-  token      String   @unique
+  token      String
   expires    DateTime
 
-  @@unique([identifier, token])
-  @@map("verification_tokens")
+  @@id([identifier, token])
 }
 
-model User {
-  id            String     @id @default(cuid())
-  name          String
-  email         String     @unique
-  passwordHash  String
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  carts         Cart[]
-  orders        Order[]
-  sessions      Session[]
-  userRoles     UserRole[]
+model Authenticator {
+  credentialID         String  @unique
+  userId               String
+  providerAccountId    String
+  credentialPublicKey  String
+  counter              Int
+  credentialDeviceType String
+  credentialBackedUp   Boolean
+  transports           String?
+  user                 User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@map("users")
-}
-
-model Role {
-  id          String     @id @default(cuid())
-  name        String     @unique
-  description String?
-  userRoles   UserRole[]
-
-  @@map("roles")
-}
-
-model UserRole {
-  id     String @id @default(cuid())
-  userId String
-  roleId String
-  role   Role   @relation(fields: [roleId], references: [id], onDelete: Cascade)
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, roleId])
-  @@index([userId])
-  @@index([roleId])
-  @@map("user_roles")
-}
-
-model Category {
-  id            String        @id @default(cuid())
-  name          String
-  slug          String        @unique
-  products      Product[]
-  subCategories SubCategory[]
-
-  @@map("categories")
-}
-
-model SubCategory {
-  id         String    @id @default(cuid())
-  name       String
-  categoryId String
-  products   Product[]
-  category   Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-
-  @@map("sub_categories")
-}
-
-model Product {
-  id            String       @id @default(cuid())
-  name          String
-  slug          String       @unique
-  description   String
-  price         Decimal      @db.Decimal(10, 2)
-  categoryId    String
-  subCategoryId String?
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
-  cartItems     CartItem[]
-  orderItems    OrderItem[]
-  category      Category     @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  subCategory   SubCategory? @relation(fields: [subCategoryId], references: [id])
-
-  @@index([categoryId])
-  @@index([subCategoryId])
-  @@map("products")
-}
-
-model Cart {
-  id        String     @id @default(cuid())
-  userId    String
-  createdAt DateTime   @default(now())
-  cartItems CartItem[]
-  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@map("carts")
-}
-
-model CartItem {
-  id        String  @id @default(cuid())
-  cartId    String
-  productId String
-  quantity  Int     @default(1)
-  cart      Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-
-  @@unique([cartId, productId])
-  @@index([cartId])
-  @@index([productId])
-  @@map("cart_items")
-}
-
-model Order {
-  id              String      @id @default(cuid())
-  userId          String
-  total           Decimal     @db.Decimal(10, 2)
-  status          Boolean     @default(false)
-  shippingAddress String
-  createdAt       DateTime    @default(now())
-  orderItems      OrderItem[]
-  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@map("orders")
-}
-
-model OrderItem {
-  id        String  @id @default(cuid())
-  orderId   String
-  productId String
-  quantity  Int
-  price     Decimal @db.Decimal(10, 2)
-  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  product   Product @relation(fields: [productId], references: [id])
-
-  @@index([orderId])
-  @@index([productId])
-  @@map("order_items")
+  @@id([userId, credentialID])
 }
