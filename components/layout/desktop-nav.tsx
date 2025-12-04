@@ -7,17 +7,31 @@ import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { logout } from "@/lib/auth-actions";
+import { useCartStore } from "@/lib/store/cart-store";
+import { useWishlistStore } from "@/lib/store/wishlist-store";
+import { useState, useEffect } from "react";
+import CartModal from "@/components/cart/cart-modal";
 
 const links = [
   { id: 1, label: "Home" ,href:"/"},
-  { id: 2, label: "Features", href:"/features"},
+  { id: 2, label: "Products", href:"/products"},
+  { id: 3, label: "Features", href:"/features"},
   { id: 4, label: "Contact", href:"/contacts" },
 ];
 
+// Desktop Navbar Component
 export default function DesktopNavbar() {
   const scrollPostion = useScrollPosition();
   const pathname = usePathname();
   const { data: session } = useSession();
+  const cartItemCount = useCartStore((state) => state.getItemCount());
+  const wishlistItems = useWishlistStore((state) => state.items);
+  const [mounted, setMounted] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
  
 
@@ -78,11 +92,34 @@ export default function DesktopNavbar() {
           </Link>
             )
           }
-          <div className="text-neutral-900 hover:text-neutral-500 transition"><Heart size={20} /></div>
-          <div className="text-neutral-900 hover:text-neutral-500 transition"><ShoppingCart size={20} /></div>
+          <Link href="/wishlist" className="relative text-neutral-900 hover:text-neutral-500 transition">
+            <Heart size={20} />
+            {mounted && wishlistItems.length > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                {wishlistItems.length}
+              </span>
+            )}
+          </Link>
+          
+          {/* Cart Icon with Badge */}
+          <button 
+            onClick={() => setIsCartOpen(true)}
+            className="relative text-neutral-900 hover:text-neutral-500 transition"
+          >
+            <ShoppingCart size={20} />
+            {mounted && cartItemCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-neutral-900 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                {cartItemCount}
+              </span>
+            )}
+          </button>
+          
           <button className="text-neutral-900 hover:text-neutral-500 transition"><Search size={20} /></button>
         </div>
       </div>
+
+      {/* Cart Modal */}
+      <CartModal isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </nav>
   );
 }
