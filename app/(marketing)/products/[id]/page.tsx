@@ -43,7 +43,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
         </div>
 
         <div className="flex flex-col space-y-6">
-          <div>
+          <div className="order-1">
             <span className="inline-block px-3 py-1 text-xs font-medium bg-neutral-100 text-neutral-800 rounded-full mb-4 capitalize">
               {product.category}
             </span>
@@ -55,14 +55,22 @@ export default async function ProductPage({ params }: ProductPageProps) {
             </p>
           </div>
 
-          <div className="prose prose-neutral max-w-none">
+          {/* Action Buttons - Order 2 on mobile, Order 4 on desktop */}
+          <div className="pt-4 flex gap-4 order-2 md:order-4">
+            <div className="flex-1">
+              <AddToCartButton product={product} />
+            </div>
+            <AddToWishlistButton product={product} />
+          </div>
+
+          <div className="prose prose-neutral max-w-none order-3 md:order-2">
             <p className="text-neutral-600 leading-relaxed">
               {product.description}
             </p>
           </div>
 
           {product.rating && (
-            <div className="flex items-center space-x-2 text-sm">
+            <div className="flex items-center space-x-2 text-sm order-4 md:order-3">
               <div className="flex text-yellow-400">
                 {'★'.repeat(Math.round(product.rating.rate))}
                 <span className="text-neutral-300">
@@ -74,14 +82,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
               </span>
             </div>
           )}
-
-          {/* Action Buttons */}
-          <div className="pt-4 flex gap-4">
-            <div className="flex-1">
-              <AddToCartButton product={product} />
-            </div>
-            <AddToWishlistButton product={product} />
-          </div>
         </div>
       </div>
     </Container>

@@ -63,7 +63,7 @@ export default function WishlistPage() {
       </div>
 
       {/* 2-Column Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
         {items.map((product) => {
           const slug = generateProductSlug(product.title, product.id);
           const isAdded = addedItems.has(product.id);
@@ -75,7 +75,7 @@ export default function WishlistPage() {
             >
               {/* Product Image */}
               <Link href={`/products/${slug}`} className="block">
-                <div className="relative w-full aspect-square bg-neutral-50 p-8">
+                <div className="relative w-full aspect-square bg-neutral-50 p-4 sm:p-8">
                   <Image
                     src={product.image}
                     alt={product.title}
@@ -86,24 +86,24 @@ export default function WishlistPage() {
               </Link>
 
               {/* Product Details */}
-              <div className="p-6 space-y-4">
+              <div className="p-3 sm:p-6 space-y-2 sm:space-y-4">
                 <div>
-                  <span className="inline-block px-3 py-1 text-xs font-medium bg-neutral-100 text-neutral-800 rounded-full mb-2 capitalize">
+                  <span className="inline-block px-2 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs font-medium bg-neutral-100 text-neutral-800 rounded-full mb-1 sm:mb-2 capitalize">
                     {product.category}
                   </span>
                   <Link href={`/products/${slug}`}>
-                    <h3 className="font-semibold text-neutral-900 hover:text-neutral-600 transition line-clamp-2 mb-2">
+                    <h3 className="font-semibold text-xs sm:text-base text-neutral-900 hover:text-neutral-600 transition line-clamp-2 mb-1 sm:mb-2">
                       {product.title}
                     </h3>
                   </Link>
-                  <p className="text-xl font-bold text-neutral-900">
+                  <p className="text-sm sm:text-xl font-bold text-neutral-900">
                     ${product.price.toFixed(2)}
                   </p>
                 </div>
 
                 {/* Rating */}
                 {product.rating && (
-                  <div className="flex items-center gap-2 text-sm">
+                  <div className="hidden sm:flex items-center gap-2 text-sm">
                     <div className="flex text-yellow-400">
                       {'★'.repeat(Math.round(product.rating.rate))}
                       <span className="text-neutral-300">
@@ -117,12 +117,12 @@ export default function WishlistPage() {
                 )}
 
                 {/* Action Buttons */}
-                <div className="flex gap-3 pt-2">
+                <div className="flex gap-2 sm:gap-3 pt-1 sm:pt-2">
                   <button
                     onClick={() => handleAddToCart(product.id)}
                     className={`
-                      flex-1 flex items-center justify-center gap-2 px-4 py-2.5 
-                      rounded-lg font-medium transition-all
+                      flex-1 flex items-center justify-center gap-1 sm:gap-2 px-2 py-2 sm:px-4 sm:py-2.5 
+                      rounded-lg font-medium transition-all text-xs sm:text-base
                       ${isAdded 
                         ? 'bg-green-500 text-white' 
                         : 'bg-neutral-900 text-white hover:bg-neutral-800'
@@ -130,15 +130,15 @@ export default function WishlistPage() {
                     `}
                     disabled={isAdded}
                   >
-                    <ShoppingCart size={18} />
-                    {isAdded ? 'Added' : 'Add to Cart'}
+                    <ShoppingCart size={14} className="sm:w-[18px] sm:h-[18px]" />
+                    {isAdded ? 'Added' : 'Add'}
                   </button>
                   <button
                     onClick={() => removeItem(product.id)}
-                    className="px-4 py-2.5 border-2 border-red-200 text-red-600 rounded-lg hover:bg-red-50 transition-colors"
+                    className="px-2 py-2 sm:px-4 sm:py-2.5 border-2 border-red-200 text-red-600 rounded-lg hover:bg-red-50 transition-colors"
                     aria-label="Remove from wishlist"
                   >
-                    <Heart size={18} fill="currentColor" />
+                    <Heart size={14} className="sm:w-[18px] sm:h-[18px]" fill="currentColor" />
                   </button>
                 </div>
               </div>

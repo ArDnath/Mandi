@@ -22,13 +22,13 @@ export function PaginationBar({
 }: PaginationBarProps) {
   return (
     <nav
-      className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 mb-8 sm:mb-12 px-2"
+      className="flex flex-row items-center justify-center gap-2 sm:gap-4 mb-8 sm:mb-12 px-2"
       aria-label="Pagination"
     >
       <button
         onClick={goToPreviousPage}
         disabled={!canGoPrev}
-        className={`flex items-center gap-1 px-4 py-2 border rounded-md transition-colors ${
+        className={`flex items-center gap-1 px-2 sm:px-4 py-2 border rounded-md transition-colors ${
           !canGoPrev
             ? "border-neutral-200 text-neutral-400 cursor-not-allowed"
             : "border-neutral-300 text-neutral-700 hover:bg-neutral-100"
@@ -54,7 +54,7 @@ export function PaginationBar({
             <button
               key={page}
               onClick={() => goToPage(page)}
-              className={`min-w-[40px] px-3 py-2 border rounded-md transition-colors ${
+              className={`min-w-[32px] sm:min-w-[40px] px-2 sm:px-3 py-2 border rounded-md transition-colors text-sm sm:text-base ${
                 page === currentPage
                   ? "bg-neutral-800 text-white border-neutral-800"
                   : "border-neutral-300 text-neutral-700 hover:bg-neutral-100"
@@ -72,7 +72,7 @@ export function PaginationBar({
       <button
         onClick={goToNextPage}
         disabled={!canGoNext}
-        className={`flex items-center gap-1 px-4 py-2 border rounded-md transition-colors ${
+        className={`flex items-center gap-1 px-2 sm:px-4 py-2 border rounded-md transition-colors ${
           !canGoNext
             ? "border-neutral-200 text-neutral-400 cursor-not-allowed"
             : "border-neutral-300 text-neutral-700 hover:bg-neutral-100"

@@ -2,10 +2,14 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Menu, X, Search, ShoppingCart, Heart } from "lucide-react";
+import { Menu, X, ShoppingCart, Heart } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { logout } from "@/lib/auth-actions";
+import { useCartStore } from "@/lib/store/cart-store";
+import { useWishlistStore } from "@/lib/store/wishlist-store";
+import CartModal from "@/components/cart/cart-modal";
+import SearchInput from "@/components/search/search-input";
 
 const links = [
   { id: 1, label: "Home", href: "/" },
@@ -15,8 +19,16 @@ const links = [
 
 export default function MobileNavbar() {
   const [open, setOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
   const { data: session } = useSession();
+  const cartItemCount = useCartStore((state) => state.getItemCount());
+  const wishlistItems = useWishlistStore((state) => state.items);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Prevent body scroll when menu is open
   useEffect(() => {
@@ -58,38 +70,36 @@ export default function MobileNavbar() {
 
         {/* Right Icons */}
         <div className="flex items-center gap-1">
-          <button
+          <Link
+            href="/wishlist"
             aria-label="Favorites"
-            className="p-2.5 rounded-lg text-neutral-900 hover:bg-neutral-100 active:bg-neutral-200 transition-colors focus:outline-none focus:ring-2 focus:ring-neutral-400"
+            className="relative p-2.5 rounded-lg text-neutral-900 hover:bg-neutral-100 active:bg-neutral-200 transition-colors focus:outline-none focus:ring-2 focus:ring-neutral-400"
           >
             <Heart size={20} />
-          </button>
+            {mounted && wishlistItems.length > 0 && (
+              <span className="absolute top-1 right-1 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                {wishlistItems.length}
+              </span>
+            )}
+          </Link>
           <button
+            onClick={() => setIsCartOpen(true)}
             aria-label="Shopping cart"
-            className="p-2.5 rounded-lg text-neutral-900 hover:bg-neutral-100 active:bg-neutral-200 transition-colors focus:outline-none focus:ring-2 focus:ring-neutral-400"
+            className="relative p-2.5 rounded-lg text-neutral-900 hover:bg-neutral-100 active:bg-neutral-200 transition-colors focus:outline-none focus:ring-2 focus:ring-neutral-400"
           >
             <ShoppingCart size={20} />
+            {mounted && cartItemCount > 0 && (
+              <span className="absolute top-1 right-1 bg-neutral-900 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                {cartItemCount}
+              </span>
+            )}
           </button>
         </div>
       </div>
 
       {/* Search Bar */}
       <div className="px-4 pb-3">
-        <div className="flex items-center border border-neutral-300 rounded-xl overflow-hidden bg-neutral-50 focus-within:border-neutral-400 focus-within:bg-white transition-colors">
-          <label htmlFor="mobile-search" className="sr-only">Search products</label>
-          <input
-            id="mobile-search"
-            type="search"
-            placeholder="Search products..."
-            className="flex-1 px-4 py-2.5 bg-transparent outline-none text-sm placeholder:text-neutral-500"
-          />
-          <button
-            aria-label="Search"
-            className="px-4 py-2.5 hover:bg-neutral-200 active:bg-neutral-300 transition-colors"
-          >
-            <Search size={20} className="text-neutral-600" />
-          </button>
-        </div>
+        <SearchInput variant="mobile" placeholder="Search products..." />
       </div>
 
       {/* Slide-in Menu */}
@@ -180,6 +190,9 @@ export default function MobileNavbar() {
           </aside>
         </div>
       )}
+      
+      {/* Cart Modal */}
+      <CartModal isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </nav>
   );
 }

@@ -1,6 +1,7 @@
 'use client';
 import Image from "next/image";
-import { Search, ShoppingCart, Heart } from "lucide-react";
+import { ShoppingCart, Heart, X, Search } from "lucide-react";
+import SearchInput from "@/components/search/search-input";
 import Link from "next/link";
 import { useScrollPosition } from "@/hooks/useScrollPosition.ts";
 import { cn } from "@/lib/utils";
@@ -28,6 +29,7 @@ export default function DesktopNavbar() {
   const wishlistItems = useWishlistStore((state) => state.items);
   const [mounted, setMounted] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [showMobileSearch, setShowMobileSearch] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -114,10 +116,34 @@ export default function DesktopNavbar() {
             )}
           </button>
           
-          <button className="text-neutral-900 hover:text-neutral-500 transition"><Search size={20} /></button>
+          <div className="w-64 hidden lg:block">
+            <SearchInput className="w-full" />
+          </div>
+          <button 
+            onClick={() => setShowMobileSearch(!showMobileSearch)}
+            className="lg:hidden text-neutral-900 hover:text-neutral-500 transition"
+          >
+            <Search size={20} />
+          </button>
         </div>
       </div>
 
+      {/* Mobile Search Overlay */}
+      {showMobileSearch && (
+        <div className="lg:hidden fixed inset-0 z-50 bg-white p-4">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-medium">Search Products</h2>
+            <button 
+              onClick={() => setShowMobileSearch(false)}
+              className="p-2 rounded-full hover:bg-gray-100"
+            >
+              <X size={20} />
+            </button>
+          </div>
+          <SearchInput className="w-full" variant="mobile" />
+        </div>
+      )}
+      
       {/* Cart Modal */}
       <CartModal isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </nav>

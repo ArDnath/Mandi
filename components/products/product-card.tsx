@@ -17,7 +17,7 @@ export function ProductCard({ product }: ProductCardProps) {
           <img
             src={product.image}
             alt={product.title}
-            className="h-full p-6 sm:p-10 md:p-16 object-contain w-full"
+            className="h-full p-4 sm:p-10 md:p-16 object-contain w-full"
           />
         </div>
 
@@ -26,7 +26,7 @@ export function ProductCard({ product }: ProductCardProps) {
             {product.title}
           </h2>
 
-          <p className="text-base sm:text-lg font-semibold text-neutral-900 tracking-tight mt-auto">
+          <p className="text-sm sm:text-lg font-semibold text-neutral-900 tracking-tight mt-auto">
             ${product.price}
           </p>
         </div>

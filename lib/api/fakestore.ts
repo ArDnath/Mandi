@@ -31,3 +31,13 @@ export async function getProductsByCategory(category: string): Promise<IProduct[
 export async function getAllCategories(): Promise<string[]> {
     return fetchJSON<string[]>(`${Base_Url}/products/categories`);
 }
+
+export async function searchProducts(query: string): Promise<IProduct[]> {
+    const allProducts = await getAllProducts();
+    const lowerQuery = query.toLowerCase();
+    
+    return allProducts.filter(product => 
+        product.title.toLowerCase().includes(lowerQuery) || 
+        product.description.toLowerCase().includes(lowerQuery)
+    );
+}
