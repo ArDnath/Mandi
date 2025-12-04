@@ -43,7 +43,12 @@ export type VerificationToken = Prisma.VerificationTokenModel
  */
 export type Authenticator = Prisma.AuthenticatorModel
 /**
- * Model Product
+ * Model CartItem
  * 
  */
-export type Product = Prisma.ProductModel
+export type CartItem = Prisma.CartItemModel
+/**
+ * Model WishlistItem
+ * 
+ */
+export type WishlistItem = Prisma.WishlistItemModel
