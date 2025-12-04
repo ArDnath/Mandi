@@ -4,6 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { Menu, X, Search, ShoppingCart, Heart } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { logout } from "@/lib/auth-actions";
 
 const links = [
   { id: 1, label: "Home", href: "/" },
@@ -11,12 +13,10 @@ const links = [
   { id: 4, label: "Contact", href: "/contacts" },
 ];
 
-import { Session } from "next-auth";
-import { logout } from "@/lib/auth-actions";
-
-export default function MobileNavbar({ session }: { session: Session | null }) {
+export default function MobileNavbar() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const { data: session } = useSession();
 
   // Prevent body scroll when menu is open
   useEffect(() => {

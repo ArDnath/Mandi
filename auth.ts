@@ -76,7 +76,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     signOut: "/sign-out",
     error: "/sign-in",
   },
-  debug: true,
   adapter: PrismaAdapter(prisma),
   callbacks: {
     async jwt({ token, user }) {

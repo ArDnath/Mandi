@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useScrollPosition } from "@/hooks/useScrollPosition.ts";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
-import { Session } from "next-auth";
+import { useSession } from "next-auth/react";
 import { logout } from "@/lib/auth-actions";
 
 const links = [
@@ -14,9 +14,10 @@ const links = [
   { id: 4, label: "Contact", href:"/contacts" },
 ];
 
-export default function DesktopNavbar({session}:{session:Session |null}) {
+export default function DesktopNavbar() {
   const scrollPostion = useScrollPosition();
   const pathname = usePathname();
+  const { data: session } = useSession();
 
  
 

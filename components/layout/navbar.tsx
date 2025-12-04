@@ -3,14 +3,12 @@
 import DesktopNavbar from '@/components/layout/desktop-nav';
 import MobileNavbar from '@/components/layout/mobile-nav'
 
-import { Session } from "next-auth";
-
-export default function Navbar({ session }: { session: Session | null }) {
+export default function Navbar() {
   return (
     <>
-      <DesktopNavbar session={session} />
+      <DesktopNavbar />
 
-      <MobileNavbar session={session} />
+      <MobileNavbar />
     </>
 
   );
