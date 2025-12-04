@@ -2,7 +2,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import bcrypt from "bcryptjs";
-import { prisma } from "@/lib/prisma";
+import  prisma  from "@/lib/prisma";
 
 const registerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
