@@ -1,58 +1,47 @@
-import { IProduct } from "./types";
+// lib/api.ts
+import { IProduct } from "./types"; // adjust path as needed
 
-const Base_Url = "https://fakestoreapi.com";
+const BASE_URL = "https://fakestoreapi.com";
 
-import axios from "axios";
+async function fetchJSON<T>(url: string, revalidateSeconds = 60): Promise<T> {
+  // revalidateSeconds: number | 0 for dynamic? use 0 to force dynamic (but avoid 0 if you want static)
+  const nextOptions = revalidateSeconds === 0 ? { cache: "no-store" } : { revalidate: revalidateSeconds };
 
-async function fetchJSON<T>(url: string): Promise<T> {
-    console.log(`[API] Starting axios request to: ${url}`);
-    try {
-        const res = await axios.get<T>(url);
-
-        console.log(`[API] Response status: ${res.status} ${res.statusText}`);
-
-        console.log(`[API] Successfully fetched data from ${url}`);
-        return res.data;
-    } catch (error) {
-        if (axios.isAxiosError(error)) {
-             console.error(`[API] Axios error fetching from ${url}:`, error.message, error.response?.status);
-             throw new Error(`Fake Store API request failed: ${error.response?.status || 'Unknown'} ${error.message}`);
-        }
-        console.error(`[API] Unknown error fetching from ${url}:`, error);
-        throw error;
-    }
+  const res = await fetch(url, { next: nextOptions as any }); 
+  // TypeScript may complain about next type shape in some setups, that's OK
+  if (!res.ok) {
+    throw new Error(`Failed to fetch ${url}: ${res.status} ${res.statusText}`);
+  }
+  return res.json() as Promise<T>;
 }
 
+/**
+ * Default: ISR with 60 seconds revalidation.
+ * If you want strictly static at build time -> call fetchJSON(url, -1) and change function to handle -1 -> cache:'force-cache'
+ */
 
-export async function getAllProducts(): Promise<IProduct[]> {
-    console.log('[API] getAllProducts() called');
-    return fetchJSON<IProduct[]>(`${Base_Url}/products`);
+export async function getAllProducts(revalidateSeconds = 60): Promise<IProduct[]> {
+  return fetchJSON<IProduct[]>(`${BASE_URL}/products`, revalidateSeconds);
 }
 
-export async function getProductById(id: number): Promise<IProduct> {
-    console.log(`[API] getProductById(${id}) called`);
-    return fetchJSON<IProduct>(`${Base_Url}/products/${id}`);
+export async function getProductById(id: number, revalidateSeconds = 60): Promise<IProduct> {
+  return fetchJSON<IProduct>(`${BASE_URL}/products/${id}`, revalidateSeconds);
 }
 
-export async function getProductsByCategory(category: string): Promise<IProduct[]> {
-    console.log(`[API] getProductsByCategory(${category}) called`);
-    return fetchJSON<IProduct[]>(`${Base_Url}/products/category/${category}`);
+export async function getProductsByCategory(category: string, revalidateSeconds = 60): Promise<IProduct[]> {
+  return fetchJSON<IProduct[]>(`${BASE_URL}/products/category/${encodeURIComponent(category)}`, revalidateSeconds);
 }
 
-export async function getAllCategories(): Promise<string[]> {
-    console.log('[API] getAllCategories() called');
-    return fetchJSON<string[]>(`${Base_Url}/products/categories`);
+export async function getAllCategories(revalidateSeconds = 60): Promise<string[]> {
+  return fetchJSON<string[]>(`${BASE_URL}/products/categories`, revalidateSeconds);
 }
 
-export async function searchProducts(query: string): Promise<IProduct[]> {
-    console.log(`[API] searchProducts("${query}") called`);
-    const allProducts = await getAllProducts();
-    const lowerQuery = query.toLowerCase();
-    
-    const results = allProducts.filter(product => 
-        product.title.toLowerCase().includes(lowerQuery) || 
-        product.description.toLowerCase().includes(lowerQuery)
-    );
-    console.log(`[API] searchProducts found ${results.length} results`);
-    return results;
+export async function searchProducts(query: string, revalidateSeconds = 60): Promise<IProduct[]> {
+  const all = await getAllProducts(revalidateSeconds);
+  const lower = query.toLowerCase();
+  return all.filter(
+    (p) =>
+      p.title.toLowerCase().includes(lower) ||
+      p.description.toLowerCase().includes(lower)
+  );
 }
