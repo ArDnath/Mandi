@@ -1,6 +1,4 @@
 // lib/api.ts
-export const runtime = "edge";
-
 import { IProduct } from "./types"; // adjust path as needed
 
 const BASE_URL = "https://fakestoreapi.com";
@@ -9,7 +7,13 @@ async function fetchJSON<T>(url: string, revalidateSeconds = 60): Promise<T> {
   // revalidateSeconds: number | 0 for dynamic? use 0 to force dynamic (but avoid 0 if you want static)
   const nextOptions = revalidateSeconds === 0 ? { cache: "no-store" } : { revalidate: revalidateSeconds };
 
-  const res = await fetch(url, { next: nextOptions as any }); 
+  const res = await fetch(url, { 
+    next: nextOptions as any,
+    headers: {
+      "User-Agent": "Mozilla/5.0 (compatible; EcommerceApp/1.0; +https://your-website.com)",
+      "Accept": "application/json"
+    }
+  }); 
   // TypeScript may complain about next type shape in some setups, that's OK
   if (!res.ok) {
     throw new Error(`Failed to fetch ${url}: ${res.status} ${res.statusText}`);
