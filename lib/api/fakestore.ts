@@ -2,26 +2,23 @@ import { IProduct } from "./types";
 
 const Base_Url = "https://fakestoreapi.com";
 
+import axios from "axios";
+
 async function fetchJSON<T>(url: string): Promise<T> {
-    console.log(`[API] Starting fetch from: ${url}`);
+    console.log(`[API] Starting axios request to: ${url}`);
     try {
-        const res = await fetch(url, {
-            cache: "no-store",
-            next: { revalidate: 0 },
-        });
+        const res = await axios.get<T>(url);
 
         console.log(`[API] Response status: ${res.status} ${res.statusText}`);
 
-        if (!res.ok) {
-            console.error(`[API] Request failed for ${url}: ${res.status} ${res.statusText}`);
-            throw new Error(`Fake Store API request failed: ${res.status} ${res.statusText}`);
-        }
-
-        const data = await res.json();
         console.log(`[API] Successfully fetched data from ${url}`);
-        return data;
+        return res.data;
     } catch (error) {
-        console.error(`[API] Error fetching from ${url}:`, error);
+        if (axios.isAxiosError(error)) {
+             console.error(`[API] Axios error fetching from ${url}:`, error.message, error.response?.status);
+             throw new Error(`Fake Store API request failed: ${error.response?.status || 'Unknown'} ${error.message}`);
+        }
+        console.error(`[API] Unknown error fetching from ${url}:`, error);
         throw error;
     }
 }

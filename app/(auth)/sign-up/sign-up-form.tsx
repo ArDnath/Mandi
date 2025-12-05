@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Eye, EyeOff, Mail, Lock, User, Loader2 } from 'lucide-react';
+import axios from 'axios';
 
 export function SignUpForm() {
   const router = useRouter();
@@ -24,29 +25,24 @@ export function SignUpForm() {
     }));
   };
 
+  // ... imports
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
 
     try {
-      const response = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Something went wrong');
-      }
+      const response = await axios.post('/api/auth/register', formData);
 
       // Redirect to sign-in page on successful registration
       router.push('/sign-in');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Registration failed. Please try again.');
+      if (axios.isAxiosError(err) && err.response) {
+        setError(err.response.data.error || 'Registration failed. Please try again.');
+      } else {
+        setError(err instanceof Error ? err.message : 'Registration failed. Please try again.');
+      }
     } finally {
       setIsLoading(false);
     }
