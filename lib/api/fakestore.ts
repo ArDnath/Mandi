@@ -1,4 +1,6 @@
 // lib/api.ts
+export const runtime = "edge";
+
 import { IProduct } from "./types"; // adjust path as needed
 
 const BASE_URL = "https://fakestoreapi.com";

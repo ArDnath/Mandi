@@ -2,7 +2,7 @@ import { getAllProducts, searchProducts } from "@/lib/api/fakestore";
 import { ProductCard } from "@/components/products/product-card";
 import { Container } from "@/components/layout/container";
 
-export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
 interface ProductsPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
