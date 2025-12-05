@@ -6,6 +6,7 @@ import { ArrowLeft } from "lucide-react";
 import { extractIdFromSlug } from "@/lib/utils/slug";
 import AddToCartButton from "@/components/products/add-to-cart-button";
 import AddToWishlistButton from "@/components/products/add-to-wishlist-button";
+import { notFound } from "next/navigation";
 
 export const runtime = "nodejs";
 
@@ -19,6 +20,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const { id: slug } = await params;
   const productId = extractIdFromSlug(slug);
   const product = await getProductById(productId);
+
+  // If product is not found, return 404
+  if (!product) {
+    notFound();
+  }
 
   return (
     <Container className="py-12">

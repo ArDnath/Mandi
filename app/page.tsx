@@ -10,11 +10,10 @@ export const runtime = "nodejs";
 
 async function Home() {
   console.log('[PAGE] Home page rendering - fetching products...');
-  try {
-    const products: IProduct[] = await getAllProducts();
-    console.log(`[PAGE] Home page - fetched ${products.length} products`);
-    
-    return (
+  const products: IProduct[] = await getAllProducts();
+  console.log(`[PAGE] Home page - fetched ${products.length} products`);
+  
+  return (
     <Container className="flex gap-2">
       <aside className="hidden md:block w-72 lg:w-80">
         <FilterBar />
@@ -31,14 +30,16 @@ async function Home() {
           </h2>
         </div>
 
-        <ProductGrid products={products} itemsPerPage={9} />
+        {products.length > 0 ? (
+          <ProductGrid products={products} itemsPerPage={9} />
+        ) : (
+          <div className="text-center py-12">
+            <p className="text-neutral-600">Unable to load products. Please try again later.</p>
+          </div>
+        )}
       </main>
     </Container>
   );
-  } catch (error) {
-    console.error('[PAGE] Home page - error fetching products:', error);
-    throw error;
-  }
 }
 
 export default Home;

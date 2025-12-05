@@ -24,15 +24,25 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
           <p className="text-neutral-500">
             {query 
               ? `Found ${products.length} product${products.length === 1 ? '' : 's'}` 
-              : "Browse our collection of high-quality items."}
+              : products.length > 0 
+                ? "Browse our collection of high-quality items."
+                : "Unable to load products at the moment."}
           </p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
-          {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+        {products.length > 0 ? (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
+            {products.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-12">
+            <p className="text-neutral-600">
+              {query ? 'No products found matching your search.' : 'No products available.'}
+            </p>
+          </div>
+        )}
       </div>
     </Container>
   );
