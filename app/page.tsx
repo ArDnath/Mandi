@@ -7,9 +7,12 @@ import { IProduct } from "@/lib/api/types";
 import { ProductGrid } from "@/components/products/product-grid";
 
 async function Home() {
-  const products: IProduct[] = await getAllProducts();
-
-  return (
+  console.log('[PAGE] Home page rendering - fetching products...');
+  try {
+    const products: IProduct[] = await getAllProducts();
+    console.log(`[PAGE] Home page - fetched ${products.length} products`);
+    
+    return (
     <Container className="flex gap-2">
       <aside className="hidden md:block w-72 lg:w-80">
         <FilterBar />
@@ -30,6 +33,10 @@ async function Home() {
       </main>
     </Container>
   );
+  } catch (error) {
+    console.error('[PAGE] Home page - error fetching products:', error);
+    throw error;
+  }
 }
 
 export default Home;
