@@ -2,6 +2,8 @@ import { getAllProducts, searchProducts } from "@/lib/api/fakestore";
 import { ProductCard } from "@/components/products/product-card";
 import { Container } from "@/components/layout/container";
 
+export const dynamic = "force-dynamic";
+
 interface ProductsPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }

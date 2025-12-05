@@ -7,6 +7,8 @@ import { extractIdFromSlug } from "@/lib/utils/slug";
 import AddToCartButton from "@/components/products/add-to-cart-button";
 import AddToWishlistButton from "@/components/products/add-to-wishlist-button";
 
+export const dynamic = "force-dynamic";
+
 interface ProductPageProps {
   params: Promise<{
     id: string;

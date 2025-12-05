@@ -6,6 +6,8 @@ import { getAllProducts } from "@/lib/api/fakestore";
 import { IProduct } from "@/lib/api/types";
 import { ProductGrid } from "@/components/products/product-grid";
 
+export const dynamic = "force-dynamic";
+
 async function Home() {
   console.log('[PAGE] Home page rendering - fetching products...');
   try {
