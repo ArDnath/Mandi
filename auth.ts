@@ -41,7 +41,7 @@ const providers: Provider[] = [
         }
 
         return {
-          id: user.id,
+          id: user.id.toString(), // Convert numeric ID to string for NextAuth
           email: user.email,
           name: user.name,
           image: user.image,
