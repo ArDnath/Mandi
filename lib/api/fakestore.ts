@@ -14,25 +14,43 @@ const HEADERS = {
 }
 
 /**
- * Cached fetch function with error handling
+ * Cached fetch function with error handling and retry logic
  * Using React cache to deduplicate requests automatically
  */
 const fetchJSON = cache(async <T,>(url: string, revalidate: number | false = 60): Promise<T> => {
-  try {
-    const res = await fetch(url, {
-      headers: HEADERS,
-      next: revalidate === false ? { revalidate: 0 } : { revalidate },
-    })
+  const maxRetries = 3;
+  let lastError: Error | unknown;
 
-    if (!res.ok) {
-      throw new Error(`API Error: ${res.status} ${res.statusText}`)
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      // Add delay between retries to avoid rate limiting
+      if (attempt > 0) {
+        const delay = Math.min(1000 * Math.pow(2, attempt - 1), 5000);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+
+      const res = await fetch(url, {
+        headers: HEADERS,
+        next: revalidate === false ? { revalidate: 0 } : { revalidate },
+      })
+
+      if (!res.ok) {
+        throw new Error(`API Error: ${res.status} ${res.statusText}`)
+      }
+
+      return res.json()
+    } catch (error) {
+      lastError = error;
+      console.error(`Failed to fetch ${url} (attempt ${attempt + 1}/${maxRetries + 1}):`, error);
+      
+      // Don't retry on last attempt
+      if (attempt === maxRetries) {
+        throw error;
+      }
     }
-
-    return res.json()
-  } catch (error) {
-    console.error(`Failed to fetch ${url}:`, error)
-    throw error
   }
+
+  throw lastError;
 })
 
 /**

@@ -22,20 +22,36 @@ interface ProductPageProps {
 
 /**
  * Generate static params for popular products at build time
- * This enables static generation for the first 20 products
+ * This enables static generation for a small subset of products
  * Other products will be generated on-demand (ISR)
+ * 
+ * Note: Reduced to 5 products to avoid rate limiting from Fake Store API
  */
 export async function generateStaticParams() {
   try {
     const { getAllProducts } = await import('@/lib/api/fakestore');
+    
+    // Add delay to avoid rate limiting
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
     const products = await getAllProducts();
     
-    // Generate static pages for first 20 products (most popular)
-    return products.slice(0, 20).map((product) => ({
+    if (!products || products.length === 0) {
+      console.warn('No products available for static generation');
+      return [];
+    }
+    
+    // Generate static pages for only first 5 products to avoid rate limiting
+    const staticProducts = products.slice(0, 5).map((product) => ({
       id: product.id.toString(),
     }));
+    
+    console.log(`Generating ${staticProducts.length} static product pages`);
+    return staticProducts;
   } catch (error) {
     console.error('Error generating static params:', error);
+    // Return empty array to allow build to continue without static pages
+    // Pages will be generated on-demand at runtime
     return [];
   }
 }

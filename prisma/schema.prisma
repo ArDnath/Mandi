@@ -59,6 +59,14 @@ model Session {
   updatedAt DateTime @updatedAt
 }
 
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@id([identifier, token])
+}
+
 model Post {
   id        Int     @id @default(autoincrement())
   title     String

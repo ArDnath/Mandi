@@ -1,0 +1,124 @@
+
+> ecommerce@0.1.0 build
+> next build
+
+   ▲ Next.js 16.0.7 (Turbopack)
+   - Environments: .env.local, .env
+   - Experiments (use with caution):
+     ✓ optimizeCss
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 7.8s
+   Running TypeScript ...
+   Collecting page data using 11 workers ...
+Generating 5 static product pages
+   Generating static pages using 11 workers (0/17) ...
+   Generating static pages using 11 workers (4/17) 
+TypeError: fetch failed
+    at ignore-listed frames {
+  [cause]: Error [ConnectTimeoutError]: Connect Timeout Error (attempted addresses: 2606:4700:3037::ac43:c281:443, 172.67.194.129:443, 2606:4700:3030::6815:14d9:443, 104.21.20.217:443, timeout: 10000ms)
+      at ignore-listed frames {
+    code: 'UND_ERR_CONNECT_TIMEOUT'
+  }
+}
+Failed to fetch https://fakestoreapi.com/products/1 (attempt 1/4): TypeError: fetch failed
+    at ignore-listed frames {
+  [cause]: Error [ConnectTimeoutError]: Connect Timeout Error (attempted addresses: 2606:4700:3037::ac43:c281:443, 172.67.194.129:443, 2606:4700:3030::6815:14d9:443, 104.21.20.217:443, timeout: 10000ms)
+      at ignore-listed frames {
+    code: 'UND_ERR_CONNECT_TIMEOUT'
+  }
+}
+Failed to fetch https://fakestoreapi.com/products/1 (attempt 2/4): TypeError: fetch failed
+    at ignore-listed frames {
+  [cause]: Error [ConnectTimeoutError]: Connect Timeout Error (attempted addresses: 2606:4700:3037::ac43:c281:443, 172.67.194.129:443, 2606:4700:3030::6815:14d9:443, 104.21.20.217:443, timeout: 10000ms)
+      at ignore-listed frames {
+    code: 'UND_ERR_CONNECT_TIMEOUT'
+  }
+}
+Failed to fetch https://fakestoreapi.com/products/1 (attempt 3/4): TypeError: fetch failed
+    at ignore-listed frames {
+  [cause]: Error [ConnectTimeoutError]: Connect Timeout Error (attempted addresses: 2606:4700:3037::ac43:c281:443, 172.67.194.129:443, 2606:4700:3030::6815:14d9:443, 104.21.20.217:443, timeout: 10000ms)
+      at ignore-listed frames {
+    code: 'UND_ERR_CONNECT_TIMEOUT'
+  }
+}
+Failed to fetch https://fakestoreapi.com/products/1 (attempt 4/4): TypeError: fetch failed
+    at ignore-listed frames {
+  [cause]: Error [ConnectTimeoutError]: Connect Timeout Error (attempted addresses: 2606:4700:3037::ac43:c281:443, 172.67.194.129:443, 2606:4700:3030::6815:14d9:443, 104.21.20.217:443, timeout: 10000ms)
+      at ignore-listed frames {
+    code: 'UND_ERR_CONNECT_TIMEOUT'
+  }
+}
+Failed to fetch product 1: TypeError: fetch failed
+    at ignore-listed frames {
+  [cause]: Error [ConnectTimeoutError]: Connect Timeout Error (attempted addresses: 2606:4700:3037::ac43:c281:443, 172.67.194.129:443, 2606:4700:3030::6815:14d9:443, 104.21.20.217:443, timeout: 10000ms)
+      at ignore-listed frames {
+    code: 'UND_ERR_CONNECT_TIMEOUT'
+  }
+}
+   Generating static pages using 11 workers (8/17) 
+   Generating static pages using 11 workers (12/17) 
+Failed to fetch https://fakestoreapi.com/products/2 (attempt 1/4): TypeError: fetch failed
+    at ignore-listed frames {
+  [cause]: Error [ConnectTimeoutError]: Connect Timeout Error (attempted addresses: 2606:4700:3030::6815:14d9:443, 104.21.20.217:443, 2606:4700:3037::ac43:c281:443, 172.67.194.129:443, timeout: 10000ms)
+      at ignore-listed frames {
+    code: 'UND_ERR_CONNECT_TIMEOUT'
+  }
+}
+Failed to fetch https://fakestoreapi.com/products/2 (attempt 2/4): TypeError: fetch failed
+    at ignore-listed frames {
+  [cause]: Error [ConnectTimeoutError]: Connect Timeout Error (attempted addresses: 2606:4700:3030::6815:14d9:443, 104.21.20.217:443, 2606:4700:3037::ac43:c281:443, 172.67.194.129:443, timeout: 10000ms)
+      at ignore-listed frames {
+    code: 'UND_ERR_CONNECT_TIMEOUT'
+  }
+}
+Failed to fetch https://fakestoreapi.com/products/2 (attempt 3/4): TypeError: fetch failed
+    at ignore-listed frames {
+  [cause]: Error [ConnectTimeoutError]: Connect Timeout Error (attempted addresses: 2606:4700:3030::6815:14d9:443, 104.21.20.217:443, 2606:4700:3037::ac43:c281:443, 172.67.194.129:443, timeout: 10000ms)
+      at ignore-listed frames {
+    code: 'UND_ERR_CONNECT_TIMEOUT'
+  }
+}
+Failed to fetch https://fakestoreapi.com/products/2 (attempt 4/4): TypeError: fetch failed
+    at ignore-listed frames {
+  [cause]: Error [ConnectTimeoutError]: Connect Timeout Error (attempted addresses: 2606:4700:3030::6815:14d9:443, 104.21.20.217:443, 2606:4700:3037::ac43:c281:443, 172.67.194.129:443, timeout: 10000ms)
+      at ignore-listed frames {
+    code: 'UND_ERR_CONNECT_TIMEOUT'
+  }
+}
+Failed to fetch product 2: TypeError: fetch failed
+    at ignore-listed frames {
+  [cause]: Error [ConnectTimeoutError]: Connect Timeout Error (attempted addresses: 2606:4700:3030::6815:14d9:443, 104.21.20.217:443, 2606:4700:3037::ac43:c281:443, 172.67.194.129:443, timeout: 10000ms)
+      at ignore-listed frames {
+    code: 'UND_ERR_CONNECT_TIMEOUT'
+  }
+}
+[PAGE] Home page rendering - fetching products...
+[PAGE] Home page - fetched 20 products
+DEBUG pagination: { totalPages: 1, productsLength: 20, itemsPerPage: 9 }
+ ✓ Generating static pages using 11 workers (17/17) in 39.1s
+   Finalizing page optimization ...
+
+Route (app)             Revalidate  Expire
+┌ ○ /                           1m      1y
+├ ○ /_not-found
+├ ƒ /api/[...nextauth]
+├ ƒ /api/auth/register
+├ ○ /cart
+├ ○ /contacts
+├ ○ /features
+├ ƒ /products
+├ ● /products/[id]              1m      1y
+│ ├ /products/1                 1m      1y
+│ ├ /products/2                 1m      1y
+│ ├ /products/3                 1m      1y
+│ └ [+2 more paths]
+├ ○ /sign-in
+├ ○ /sign-up
+└ ○ /wishlist
+
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
+
