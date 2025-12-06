@@ -7,6 +7,8 @@ import { IProduct } from "@/lib/api/types";
 import { ProductGrid } from "@/components/products/product-grid";
 
 export const runtime = "nodejs";
+// Revalidate page every hour (3600 seconds) for ISR
+export const revalidate = 3600;
 
 async function Home() {
   console.log('[PAGE] Home page rendering - fetching products...');

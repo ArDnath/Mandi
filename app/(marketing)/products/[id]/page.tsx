@@ -9,11 +9,35 @@ import AddToWishlistButton from "@/components/products/add-to-wishlist-button";
 import { notFound } from "next/navigation";
 
 export const runtime = "nodejs";
+// Revalidate page every hour (3600 seconds) for ISR
+export const revalidate = 3600;
+// Allow dynamic params for products not in generateStaticParams
+export const dynamicParams = true;
 
 interface ProductPageProps {
   params: Promise<{
     id: string;
   }>;
+}
+
+/**
+ * Generate static params for popular products at build time
+ * This enables static generation for the first 20 products
+ * Other products will be generated on-demand (ISR)
+ */
+export async function generateStaticParams() {
+  try {
+    const { getAllProducts } = await import('@/lib/api/fakestore');
+    const products = await getAllProducts();
+    
+    // Generate static pages for first 20 products (most popular)
+    return products.slice(0, 20).map((product) => ({
+      id: product.id.toString(),
+    }));
+  } catch (error) {
+    console.error('Error generating static params:', error);
+    return [];
+  }
 }
 
 export default async function ProductPage({ params }: ProductPageProps) {

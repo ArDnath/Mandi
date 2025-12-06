@@ -22,11 +22,11 @@ function SearchInputInner({
   const searchParams = useSearchParams();
   const [searchValue, setSearchValue] = useState(initialValue);
 
-  // Only update from URL on initial load
+  // Sync search value with URL query parameter
   useEffect(() => {
     const query = searchParams?.get('q') || '';
     setSearchValue(query);
-  }, []); // Empty dependency array to run only once on mount
+  }, [searchParams]); // Include searchParams to sync with URL changes
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {

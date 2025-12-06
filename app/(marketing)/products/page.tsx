@@ -3,6 +3,8 @@ import { ProductCard } from "@/components/products/product-card";
 import { Container } from "@/components/layout/container";
 
 export const runtime = "nodejs";
+// Revalidate page every hour (3600 seconds) for ISR
+export const revalidate = 3600;
 
 interface ProductsPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;

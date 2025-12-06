@@ -111,3 +111,7 @@ export const preloadProducts = () => {
 export const preloadProduct = (id: number) => {
   void getProductById(id)
 }
+
+// Re-export fetching utilities for use in other modules
+export { fetchInParallel, fetchWaterfall, fetchWithRetry, prefetchData } from './fetching-utils';
+
