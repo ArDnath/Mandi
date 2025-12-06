@@ -3,8 +3,13 @@ import { cache } from 'react'
 import 'server-only'
 import axios from 'axios'
 import { IProduct } from "./types"
+// Import local JSON data as fallback
+import localProductsData from '../fakestoreapi.json'
 
 const BASE_URL = "https://fakestoreapi.com"
+
+// Type assertion for the imported JSON
+const localProducts = localProductsData as IProduct[]
 
 /**
  * Axios instance with timeout configuration
@@ -72,32 +77,36 @@ const fetchJSON = cache(async <T,>(url: string, revalidate: number | false = 60)
 
 /**
  * Get all products with ISR (60 second revalidation)
- * Falls back gracefully if API fails during build
+ * Falls back to local JSON if API fails
  */
 export const getAllProducts = cache(async (): Promise<IProduct[]> => {
   try {
     return await fetchJSON<IProduct[]>(`${BASE_URL}/products`)
   } catch (error) {
-    console.error('Failed to fetch products:', error)
-    // Return empty array as fallback during build
-    return []
+    console.error('Failed to fetch products from API, using local data:', error)
+    // Return local products as fallback
+    return localProducts
   }
 })
 
 /**
  * Get product by ID with ISR
+ * Falls back to local JSON if API fails
  */
 export const getProductById = cache(async (id: number): Promise<IProduct | null> => {
   try {
     return await fetchJSON<IProduct>(`${BASE_URL}/products/${id}`)
   } catch (error) {
-    console.error(`Failed to fetch product ${id}:`, error)
-    return null
+    console.error(`Failed to fetch product ${id} from API, searching local data:`, error)
+    // Fallback to local products
+    const product = localProducts.find(p => p.id === id)
+    return product || null
   }
 })
 
 /**
  * Get products by category with ISR
+ * Falls back to local JSON if API fails
  */
 export const getProductsByCategory = cache(async (category: string): Promise<IProduct[]> => {
   try {
@@ -105,20 +114,24 @@ export const getProductsByCategory = cache(async (category: string): Promise<IPr
       `${BASE_URL}/products/category/${encodeURIComponent(category)}`
     )
   } catch (error) {
-    console.error(`Failed to fetch category ${category}:`, error)
-    return []
+    console.error(`Failed to fetch category ${category} from API, filtering local data:`, error)
+    // Fallback to local products filtered by category
+    return localProducts.filter(p => p.category === category)
   }
 })
 
 /**
  * Get all categories with ISR
+ * Falls back to local JSON if API fails
  */
 export const getAllCategories = cache(async (): Promise<string[]> => {
   try {
     return await fetchJSON<string[]>(`${BASE_URL}/products/categories`)
   } catch (error) {
-    console.error('Failed to fetch categories:', error)
-    return []
+    console.error('Failed to fetch categories from API, extracting from local data:', error)
+    // Fallback to extracting unique categories from local products
+    const categories = [...new Set(localProducts.map(p => p.category))]
+    return categories
   }
 })
 
