@@ -1,21 +1,25 @@
 // lib/api/fakestore.ts
 import { cache } from 'react'
 import 'server-only'
+import axios from 'axios'
 import { IProduct } from "./types"
 
 const BASE_URL = "https://fakestoreapi.com"
 
-// Comprehensive headers to prevent API blocking
-const HEADERS = {
-  "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
-  "Accept": "application/json, text/plain, */*",
-  "Accept-Language": "en-US,en;q=0.9",
-  "Referer": "https://fakestoreapi.com/",
-}
+/**
+ * Axios instance with timeout configuration
+ */
+const axiosInstance = axios.create({
+  baseURL: BASE_URL,
+  timeout: 10000, // 10 second timeout
+  headers: {
+    'Content-Type': 'application/json',
+  }
+})
 
 /**
- * Cached fetch function with error handling and retry logic
- * Using React cache to deduplicate requests automatically
+ * Cached fetch function using axios with retry logic
+ * React cache provides deduplication and caching
  */
 const fetchJSON = cache(async <T,>(url: string, revalidate: number | false = 60): Promise<T> => {
   const maxRetries = 3;
@@ -29,19 +33,21 @@ const fetchJSON = cache(async <T,>(url: string, revalidate: number | false = 60)
         await new Promise(resolve => setTimeout(resolve, delay));
       }
 
-      const res = await fetch(url, {
-        headers: HEADERS,
-        next: revalidate === false ? { revalidate: 0 } : { revalidate },
-      })
+      // Use axios for HTTP request
+      const response = await axiosInstance.get<T>(url)
 
-      if (!res.ok) {
-        throw new Error(`API Error: ${res.status} ${res.statusText}`)
-      }
-
-      return res.json()
+      // Axios automatically parses JSON and throws on non-2xx status codes
+      return response.data
     } catch (error) {
       lastError = error;
-      console.error(`Failed to fetch ${url} (attempt ${attempt + 1}/${maxRetries + 1}):`, error);
+      
+      // Better error logging with axios
+      if (axios.isAxiosError(error)) {
+        console.error(`Failed to fetch ${url} (attempt ${attempt + 1}/${maxRetries + 1}):`, 
+          error.response?.status, error.response?.statusText || error.message);
+      } else {
+        console.error(`Failed to fetch ${url} (attempt ${attempt + 1}/${maxRetries + 1}):`, error);
+      }
       
       // Don't retry on last attempt
       if (attempt === maxRetries) {
