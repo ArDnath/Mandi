@@ -25,9 +25,17 @@ interface ProductPageProps {
  * This enables static generation for a small subset of products
  * Other products will be generated on-demand (ISR)
  * 
- * Note: Reduced to 5 products to avoid rate limiting from Fake Store API
+ * Note: Skips static generation on Vercel due to Fake Store API blocking
  */
 export async function generateStaticParams() {
+  // Skip static generation on Vercel to avoid 403 errors
+  // Fake Store API often blocks Vercel's build servers
+  if (process.env.VERCEL || process.env.VERCEL_ENV) {
+    console.log('⚠️ Running on Vercel - Skipping static generation to avoid API blocks');
+    console.log('ℹ️ Pages will be generated on-demand at runtime (ISR)');
+    return [];
+  }
+
   try {
     const { getAllProducts } = await import('@/lib/api/fakestore');
     

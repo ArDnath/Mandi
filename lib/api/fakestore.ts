@@ -8,13 +8,16 @@ const BASE_URL = "https://fakestoreapi.com"
 
 /**
  * Axios instance with timeout configuration
+ * Longer timeout for Vercel deployments where API may be slow/blocked
  */
 const axiosInstance = axios.create({
   baseURL: BASE_URL,
-  timeout: 10000, // 10 second timeout
+  timeout: 30000, // 30 second timeout (increased for Vercel)
   headers: {
     'Content-Type': 'application/json',
-  }
+  },
+  // Disable axios default retry to use our custom retry logic
+  validateStatus: (status) => status >= 200 && status < 300,
 })
 
 /**
@@ -22,14 +25,14 @@ const axiosInstance = axios.create({
  * React cache provides deduplication and caching
  */
 const fetchJSON = cache(async <T,>(url: string, revalidate: number | false = 60): Promise<T> => {
-  const maxRetries = 3;
+  const maxRetries = 5; // Increased for Vercel
   let lastError: Error | unknown;
 
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
       // Add delay between retries to avoid rate limiting
       if (attempt > 0) {
-        const delay = Math.min(1000 * Math.pow(2, attempt - 1), 5000);
+        const delay = Math.min(2000 * Math.pow(2, attempt - 1), 10000); // Longer delays
         await new Promise(resolve => setTimeout(resolve, delay));
       }
 
@@ -43,8 +46,16 @@ const fetchJSON = cache(async <T,>(url: string, revalidate: number | false = 60)
       
       // Better error logging with axios
       if (axios.isAxiosError(error)) {
+        const status = error.response?.status;
+        
+        // Don't retry on 403 - it's a permanent block, not transient
+        if (status === 403) {
+          console.error(`❌ API blocked (403) - Fake Store API may be blocking Vercel servers`);
+          throw new Error('API_BLOCKED: Fake Store API returned 403 Forbidden');
+        }
+        
         console.error(`Failed to fetch ${url} (attempt ${attempt + 1}/${maxRetries + 1}):`, 
-          error.response?.status, error.response?.statusText || error.message);
+          status, error.response?.statusText || error.message);
       } else {
         console.error(`Failed to fetch ${url} (attempt ${attempt + 1}/${maxRetries + 1}):`, error);
       }
