@@ -1,17 +1,17 @@
 'use client';
 import Image from "next/image";
 import { ShoppingCart, Heart, X, Search } from "lucide-react";
-import SearchInput from "@/components/search/search-input";
+import SearchInput from "@/components/common/search-input";
 import Link from "next/link";
-import { useScrollPosition } from "@/hooks/useScrollPosition.ts";
+import { useScrollPosition } from "@/hooks/useScrollPosition";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { logout } from "@/lib/auth-actions";
+import { logout } from "@/app/(auth)/actions/auth";
 import { useCartStore } from "@/lib/store/cart-store";
 import { useWishlistStore } from "@/lib/store/wishlist-store";
 import { useState, useEffect } from "react";
-import CartModal from "@/components/cart/cart-modal";
+import CartModal from "@/app/(marketing)/cart/_components/cart-modal";
 
 const links = [
   { id: 1, label: "Home" ,href:"/"},
@@ -85,7 +85,7 @@ export default function DesktopNavbar() {
               </>
             ):(
               <Link
-          href={'/sign-in'}
+          href={'/login'}
             className="text-sm font-medium text-heading hover:underline"
           >
             <button className="rounded-lg shadow-sm shadow-neutral-400  hover:shadow-neutral-500

@@ -5,11 +5,11 @@ import Link from "next/link";
 import { Menu, X, ShoppingCart, Heart } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { logout } from "@/lib/auth-actions";
+import { logout } from "@/app/(auth)/actions/auth";
 import { useCartStore } from "@/lib/store/cart-store";
 import { useWishlistStore } from "@/lib/store/wishlist-store";
-import CartModal from "@/components/cart/cart-modal";
-import SearchInput from "@/components/search/search-input";
+import CartModal from "@/app/(marketing)/cart/_components/cart-modal";
+import SearchInput from "@/components/common/search-input";
 
 const links = [
   { id: 1, label: "Home", href: "/" },
@@ -179,7 +179,7 @@ export default function MobileNavbar() {
                 </button>
               ) : (
                 <Link
-                  href="/sign-in"
+                  href="/login"
                   onClick={() => setOpen(false)}
                   className="block py-3 px-4 text-center bg-neutral-900 text-white rounded-lg font-medium hover:bg-neutral-800 active:bg-neutral-700 transition-colors focus:outline-none focus:ring-2 focus:ring-neutral-400"
                 >

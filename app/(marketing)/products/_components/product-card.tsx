@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { generateProductSlug } from "@/lib/utils/slug";
-import { IProduct } from "@/lib/api/types";
+import { IProduct } from "@/types/api";
 
 interface ProductCardProps {
   product: IProduct;

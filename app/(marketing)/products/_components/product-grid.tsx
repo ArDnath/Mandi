@@ -1,7 +1,7 @@
 "use client";
 
 
-import { IProduct } from "@/lib/api/types";
+import { IProduct } from "@/types/api";
 import { ProductCard } from "./product-card";
 import { usePagination } from "@/hooks/usePagination";
 import { PaginationBar } from "./pagination-bar";

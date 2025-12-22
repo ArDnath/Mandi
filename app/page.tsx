@@ -1,10 +1,10 @@
 import React from "react";
 import { Container } from "@/components/layout/container";
-import FilterBar from "@/components/home/filter-bar";
-import HeroSection from "@/components/home/hero-section";
-import { getAllProducts } from "@/lib/api/fakestore";
-import { IProduct } from "@/lib/api/types";
-import { ProductGrid } from "@/components/products/product-grid";
+import FilterBar from "@/app/(marketing)/home/_components/filter-bar";
+import HeroSection from "@/app/(marketing)/home/_components/hero-section";
+import { getAllProducts } from "@/services/external/fakestore";
+import { IProduct } from "@/types/api"; 
+import { ProductGrid } from "@/app/(marketing)/products/_components/product-grid";
 
 export const runtime = "nodejs";
 // Revalidate page every hour (3600 seconds) for ISR

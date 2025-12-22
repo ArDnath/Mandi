@@ -1,5 +1,5 @@
-import { getAllProducts, searchProducts } from "@/lib/api/fakestore";
-import { ProductCard } from "@/components/products/product-card";
+import { getAllProducts, searchProducts } from "@/services/external/fakestore";
+import { ProductCard } from "./_components/product-card";
 import { Container } from "@/components/layout/container";
 
 export const runtime = "nodejs";

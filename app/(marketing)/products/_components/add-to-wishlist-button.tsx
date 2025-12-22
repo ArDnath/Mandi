@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Heart } from 'lucide-react';
 import { useWishlistStore } from '@/lib/store/wishlist-store';
-import { IProduct } from '@/lib/api/types';
+import { IProduct } from '@/types/api';
 
 interface AddToWishlistButtonProps {
   product: IProduct;

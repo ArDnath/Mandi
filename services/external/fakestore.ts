@@ -2,9 +2,9 @@
 import { cache } from 'react'
 import 'server-only'
 import axios from 'axios'
-import { IProduct } from "./types"
+import { IProduct } from "@/types/api"
 // Import local JSON data as fallback
-import localProductsData from '../fakestoreapi.json'
+import localProductsData from './fakestoreapi.json'
 
 const BASE_URL = "https://fakestoreapi.com"
 

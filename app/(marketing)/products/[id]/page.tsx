@@ -1,11 +1,11 @@
-import { getProductById } from "@/lib/api/fakestore";
+import { getProductById } from "@/services/external/fakestore";
 import { Container } from "@/components/layout/container";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { extractIdFromSlug } from "@/lib/utils/slug";
-import AddToCartButton from "@/components/products/add-to-cart-button";
-import AddToWishlistButton from "@/components/products/add-to-wishlist-button";
+import AddToCartButton from "../_components/add-to-cart-button";
+import AddToWishlistButton from "../_components/add-to-wishlist-button";
 import { notFound } from "next/navigation";
 
 export const runtime = "nodejs";
@@ -37,7 +37,7 @@ export async function generateStaticParams() {
   }
 
   try {
-    const { getAllProducts } = await import('@/lib/api/fakestore');
+    const { getAllProducts } = await import('@/services/external/fakestore');
     
     // Add delay to avoid rate limiting
     await new Promise(resolve => setTimeout(resolve, 1000));
