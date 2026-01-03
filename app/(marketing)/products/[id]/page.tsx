@@ -4,8 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { extractIdFromSlug } from "@/lib/utils/slug";
-import AddToCartButton from "../_components/add-to-cart-button";
-import AddToWishlistButton from "../_components/add-to-wishlist-button";
+import AddToCartButton from "@/app/(marketing)/products/_components/add-to-cart-button";
+import AddToWishlistButton from "@/app/(marketing)/products/_components/add-to-wishlist-button";
 import { notFound } from "next/navigation";
 
 export const runtime = "nodejs";
