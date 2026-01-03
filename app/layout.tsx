@@ -10,10 +10,11 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 export const metadata: Metadata = {
   title: "Mandi",
   description: "E-commerce Catalog & Cart",
+  metadataBase: new URL("https://mandi.aryamn.space"),
   openGraph:{
     title: "mandi",
     description: "E-commerce Catalog & Cart",
-    url: "http://mandi.aryamn.space ",
+    url: "http://mandi.aryamn.space",
     siteName: "mandi",
     images:[{
       url:"/og.png",
